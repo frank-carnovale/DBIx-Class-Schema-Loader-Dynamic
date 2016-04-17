@@ -7,7 +7,7 @@ use base qw/DBIx::Class::Schema::Loader::DBI/;
 use mro 'c3';
 use Data::Dumper;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 sub new {
     my ($self, %args) = @_;

@@ -13,7 +13,10 @@ Guide information is embedded in the main POD text.
 Running the Test application
 ----------------------------
 
-prove -l 
+```
+prove -lv
+```
+
 
 Installing
 ----------
@@ -21,7 +24,7 @@ Installing
 perl Makefile.PL
 make test
 make install
-'''
+```
 
 Building a distribution
 -----------------------

@@ -15,6 +15,14 @@ Running the Test application
 
 prove -l 
 
+Installing
+----------
+```
+perl Makefile.PL
+make test
+make install
+'''
+
 Building a distribution
 -----------------------
 ```
@@ -22,6 +30,6 @@ perl Makefile.PL
 make test
 make manifest
 make dist
-mojo cpanify -u USER -p PASS *Tables*tar.gz
+mojo cpanify -u USER -p PASS *tar.gz
 ```
 

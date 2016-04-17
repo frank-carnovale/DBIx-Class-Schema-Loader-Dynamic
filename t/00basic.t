@@ -1,5 +1,3 @@
-use Mojo::Base -strict;
-
 use Test::Most;
 
 my $testdir;

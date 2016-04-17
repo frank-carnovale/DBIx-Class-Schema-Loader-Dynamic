@@ -11,7 +11,7 @@ sub connect_info { [ "dbi:SQLite:$ENV{EXAMPLEDB}", '', '' ] }
 sub setup {
     my $class = shift;
 
-    my $schema = $class->connect(@{$class->connect_info});
+    my $schema = $class->connection(@{$class->connect_info});
 
     DBIx::Class::Schema::Loader::Dynamic->new(
         left_base_classes => 'ExampleDB::Row',

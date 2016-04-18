@@ -241,21 +241,23 @@ Ideally that module could be refactored to make these overrides more future-proo
 
 You don't need to keep the C<$loader> object after running C<< load >>.
 
-But if you do, then after 'setup',
+But if you do, then after 'setup' (for a Postgres database), 
 
 B<DBIx::Class::Schema::Loader::Dynamic> inherits all methods from
 
 L<DBIx::Class::Schema::Loader::DBI::Pg> (*) which inherits all methods from
 
-L<DBIx::Class::Schema::Loader> which inherits all methods from
+L<DBIx::Class::Schema::Loader::DBI::Component::QuotedDefault> which inherits all methods from
 
-L<DBIx::Class::Schema::Loader::Base> which inherits all methods from
+L<DBIx::Class::Schema::Loader::DBI> which inherits all methods from
+
+L<DBIx::Class::Schema::Loader::DBI::Base> which inherits all methods from
 
 L<Class::Accessor::Grouped> and L<Class::C3::Componentised>.
 
 (*or your engine-specific DBIx::Class::Schema::Loader::DBI::<subclass>)
 
-.. but implements no new ones.
+.. but implements no new ones.  Note that L<DBIx::Class::Schema> itself is kept out of the inheritance chain, at all times.
 
 =head1 CONNECTION HANDLING
 

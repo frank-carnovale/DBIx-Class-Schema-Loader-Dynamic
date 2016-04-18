@@ -6,7 +6,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
   NAME         => 'DBIx::Class::Schema::Loader::Dynamic',
   VERSION_FROM => 'lib/DBIx/Class/Schema/Loader/Dynamic.pm',
-  ABSTRACT     => 'Genuinely Dynamic Schema Generation for DBIx::Class',
+  ABSTRACT     => 'Really Dynamic Schema Generation for DBIx::Class',
   AUTHOR       => 'Frank Carnovale <frankc@cpan.org>',
   LICENSE      => 'artistic_2',
   PREREQ_PM    => {'DBIx::Class::Schema::Loader' => '0.07045'},

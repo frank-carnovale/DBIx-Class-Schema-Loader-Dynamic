@@ -160,17 +160,20 @@ DBIx::Class::Schema::Loader::Dynamic -- Really Dynamic Schema Generation for DBI
 
     # finally, somewhere in my application
     use MySchema;
-    my $schema = MySchema->new;
+    my $schema = MySchema->setup;
+
+    # All table classes are now active.  They are based on MySchema::Row.
+
     my $artist = $schema->resultset('Artist')->first;
-    my $cd     = $schema->resultset('Cd')->first;
+    my $cd     = $artist->cds()->first;
     printf "%s but %s\n", $cd->hello, $artist->hello
 
 =head1 DESCRIPTION
 
 L<DBIx::Class::Schema::Loader::Dynamic> is a faster and simpler driver for the
-dynamic schema generation feature of <DBIx::Class::Schema::Loader>.   
+dynamic schema generation feature of L<DBIx::Class::Schema::Loader>.   
 
-It will cause Perl classes for each table to spring into existence and it runs the declarative
+It will make Perl classes for each table spring into existence and it runs the declarative
 statements (such as add_columns, has_many, ..) immediately at catalog discovery time,
 rather than code-generating Perl modules and then 'use'-ing those modules multiple times.
 
@@ -178,7 +181,7 @@ Manual customisation of table definition code is still achieved by B<optionally>
 which act as 'mix-ins' as expected by L<load_classes in DBIx::Class::Schema|DBIx::Class::Schema/load_classes>
 (except that you don't actually have to call load_classes).
 
-If you want to generate static ORM declarative code from your database, this module is not for you.
+If you want to generate static database definition code from your database, this module is not for you.
 
 =head1 REASON
 
@@ -200,14 +203,14 @@ introduces a lot of Dark Code to the start of every production program, hence 'n
 
 This module enables a direct 'live' approach, as distinct from hidden-code-generation. 
 It's faster, it removes a lot of Dark Code from production, and it's more familiar
-to users of Class::DBI::Loader and some other ORMs.
+to users of Class::DBI::Loader and some other language ORMs.
 
 =head1 LIMITATIONS
 
 =head2 Loader Options
 
 We expect most of the loader_options for DBIx::Class::Schema::Loader to be valid, but not all variations
-can be tested.  In particular, all tests to date have been with C<use_namespaces=>0> and C<naming=>'v8'>.
+can be tested.  In particular, all tests to date have been with C<<use_namespaces=>0>> and C<<naming=>'v8'>>.
 
 =head2 Base 'Row' Class
 
@@ -228,17 +231,17 @@ That logic is removed in this release.  Workaround: don't run this on a connect 
 
 =head2 Private DBIx methods overriden
 
-This module overrides some private methods (i.e. whose names =~ /_\w+/) of L<DBIx::Class::Schema::Loader::Base>.
+This module overrides some private methods (i.e. whose names =~ /^_\w+/) of L<DBIx::Class::Schema::Loader::Base>.
 Ideally that module could be refactored to make these overrides more future-proof.  I'll ask.
 
 =head1 METHODS
 
- After $schema is connected to a database (e.g. Postres) and after 'new' is called,
- DBIx::Class::Schema::Loader::Dynamic           inherits all methods from
- DBIx::Class::Schema::Loader::DBI::Pg (*) which inherits all methods from
- DBIx::Class::Schema::Loader              which inherits all methods from
- DBIx::Class::Schema::Loader::Base        which inherits all methods from
- Class::Accessor::Grouped and Class::C3::Componentised.
+After $schema is connected to a database (e.g. Postres) and after 'new' is called,
+DBIx::Class::Schema::Loader::Dynamic           inherits all methods from
+DBIx::Class::Schema::Loader::DBI::Pg (*) which inherits all methods from
+DBIx::Class::Schema::Loader              which inherits all methods from
+DBIx::Class::Schema::Loader::Base        which inherits all methods from
+Class::Accessor::Grouped and Class::C3::Componentised.
 
 (*or your engine-specific DBIx::Class::Schema::Loader::DBI::<subclass>)
 
@@ -256,7 +259,7 @@ See L<connect in DBIX::Schema::Class|DBIx::Class::Schema/connect>.
 
 =head1 DEBUGGING
 
-To see declarative DBIx::Class statements are being run, set debug=>1 among the loader options.
+To see declarative DBIx::Class statements are being run, set C<<debug=>1>> among the loader options.
 
 =head1 REPOSITORY
 

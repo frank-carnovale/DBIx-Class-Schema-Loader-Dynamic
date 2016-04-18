@@ -14,7 +14,7 @@ sub new {
     my $class = ref $self || $self;
 
     $args{dump_directory}    ||= '/die/if/I/get/used';
-    $args{left_base_classes} ||= 'DBIx::Class::Core';
+    $args{left_base_classes} ||= ['DBIx::Class::Core'];
 
     my $new = $self->next::method(%args);
 
@@ -185,6 +185,8 @@ If you want to generate static database definition code from your database, this
 
 =head1 REASON
 
+=head2 Design Goal
+
 I consider dynamic schema discovery to have advantages over code-generation, especially as applied to agile techniques,
 software release management, database schema version management, and continuous delivery.
 
@@ -193,6 +195,8 @@ tables, columns, or relationships, can be done B<without requiring any change to
 dropped objects of course).  If this goal is maintained then most of the pain and bureaucracy of schema version control goes away.
 
 This module allows you to achieve that goal and still use the excellent L<DBIx::Class> ORM.
+
+=head2 Implementation
 
 L<DBIx::Class::Schema::Loader> already does outstanding work in catalog-discovery for many database products and in
 mapping names to the object model.  We want to inherit this (literally), so we do.  However to activate the results,
@@ -210,7 +214,7 @@ to users of Class::DBI::Loader and some other language ORMs.
 =head2 Loader Options
 
 We expect most of the loader_options for DBIx::Class::Schema::Loader to be valid, but not all variations
-can be tested.  In particular, all tests to date have been with C<<use_namespaces=>0>> and C<<naming=>'v8'>>.
+can be tested.  In particular, all tests to date have been with C<< use_namespaces=>0 >> and C<< naming=>'v8' >>.
 
 =head2 Base 'Row' Class
 
@@ -221,27 +225,33 @@ This gives you one place to declare things like the ubiquitous C<load_components
 and to add/override other methods you wish to be inherited by all table classes in your object model.
 Make sure your base row class inherits from L<DBIx::Class::Core>.  
 
-Whether this is a Limitation or a feature is debatable.  You can live without it by just not declaring
-C<left_base_classes>, in which case it will be defaulted automatically to L<DBIx::Class::Core>.
+You can leave out C<left_base_classes>, in which case it will be defaulted automatically to L<DBIx::Class::Core>.
 
 =head2 Moniker Clash Logic removed
 
 Vanilla L<DBIx::Class::Loader> includes logic that checks for duplicates in the classnames generated for table names.
 That logic is removed in this release.  Workaround: don't run this on a connect string that yields duplicate table names.
 
-=head2 Private DBIx methods overriden
+=head2 Private methods overriden
 
 This module overrides some private methods (i.e. whose names =~ /^_\w+/) of L<DBIx::Class::Schema::Loader::Base>.
 Ideally that module could be refactored to make these overrides more future-proof.  I'll ask.
 
 =head1 METHODS
 
-After $schema is connected to a database (e.g. Postres) and after 'new' is called,
-DBIx::Class::Schema::Loader::Dynamic           inherits all methods from
-DBIx::Class::Schema::Loader::DBI::Pg (*) which inherits all methods from
-DBIx::Class::Schema::Loader              which inherits all methods from
-DBIx::Class::Schema::Loader::Base        which inherits all methods from
-Class::Accessor::Grouped and Class::C3::Componentised.
+You don't need to keep the C<$loader> object after running C<< load >>.
+
+But if you do, then after 'setup',
+
+B<DBIx::Class::Schema::Loader::Dynamic> inherits all methods from
+
+L<DBIx::Class::Schema::Loader::DBI::Pg> (*) which inherits all methods from
+
+L<DBIx::Class::Schema::Loader> which inherits all methods from
+
+L<DBIx::Class::Schema::Loader::Base> which inherits all methods from
+
+L<Class::Accessor::Grouped> and L<Class::C3::Componentised>.
 
 (*or your engine-specific DBIx::Class::Schema::Loader::DBI::<subclass>)
 
@@ -253,13 +263,13 @@ In the Synopsis, the handling of the connect string and the introduction of a 's
 Our suggestion allows a schema 'MySchema' itself to be sub-classed if required, with the opportunity to override the 
 connect-string or the loader options.
 
-Being standard DBIx::Class:Schema functionality, note the $schema handle will be just the literal class name
+Being standard L<DBIx::Class:Schema> functionality, note the $schema handle will be just the literal class name
 (returned when you call C<connection>) or a true schema instance object ref (returned when you call C<connect>).
 See L<connect in DBIX::Schema::Class|DBIx::Class::Schema/connect>.
 
 =head1 DEBUGGING
 
-To see declarative DBIx::Class statements are being run, set C<<debug=>1>> among the loader options.
+To trace the declarative DBIx::Class statements that are being run, set C<< debug=>1 >> among the loader options.
 
 =head1 REPOSITORY
 

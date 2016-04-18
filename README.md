@@ -29,7 +29,7 @@ make install
 Building a distribution
 -----------------------
 ```
-(make clean)
+make clean && rm *.tar.gz
 perl Makefile.PL
 make test
 make manifest

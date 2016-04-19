@@ -9,7 +9,10 @@ WriteMakefile(
   ABSTRACT     => 'Really Dynamic Schema Generation for DBIx::Class',
   AUTHOR       => 'Frank Carnovale <frankc@cpan.org>',
   LICENSE      => 'artistic_2',
-  PREREQ_PM    => {'DBIx::Class::Schema::Loader' => '0.07045'},
+  PREREQ_PM    => {
+    'DBIx::Class::Schema::Loader' => '0.07045',
+    'Test::Most' => '0',
+  },
   test         => {TESTS => 't/*.t'},
   META_MERGE   => {
     dynamic_config => 0,
